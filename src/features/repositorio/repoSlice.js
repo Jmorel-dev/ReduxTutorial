@@ -1,10 +1,10 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {fetchRestfulUserById} from './userAPI';
+import { fetchRestfulReposByUserId } from './repoAPI';
 
 
 //status: 'idle' | 'loading' | 'failed';
 const initialState = {
-  entity: {},
+  entities: [],
   status: 'idle',
   error: undefined
 };
@@ -13,33 +13,33 @@ const initialState = {
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
-export const fetchUserById = createAsyncThunk(
-  'user/fetchUserById', 
+export const fetchReposByUserId = createAsyncThunk(
+  'repo/fetchReposByUserId', 
   async (userId, thunkAPI) => {
     console.log('llamando => '+userId)
-  const response = await fetchRestfulUserById(userId);
+  const response = await fetchRestfulReposByUserId(userId);
   return response;
 });
 
-export const userSlice = createSlice({
-  name: 'user',
+export const repoSlice = createSlice({
+  name: 'repo',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUserById.pending, (state) => {
+      .addCase(fetchReposByUserId.pending, (state) => {
         console.log('loading')
         state.status = 'loading';
         state.error = undefined;
       })
-      .addCase(fetchUserById.fulfilled, (state, action) => {
+      .addCase(fetchReposByUserId.fulfilled, (state, action) => {
         console.log('idle')
-        console.log("id => "+action.payload?.id)
+        console.log("length => "+action.payload?.length)
         state.status = 'idle';
         state.error = undefined;
-        state.entity = action.payload;
+        state.entities = action.payload;
       })
-      .addCase(fetchUserById.rejected, (state, action)=>{
+      .addCase(fetchReposByUserId.rejected, (state, action)=>{
         console.log('rejected')
         console.log('message ==> '+action.error?.message)
         state.status = 'failed';
@@ -53,8 +53,8 @@ export const userSlice = createSlice({
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectUser = (state) => state.user.entity;
-export const selectStatus = (state) => state.user.status; 
-export const selectError = (state) => state.user.error;
+export const selectRepos = (state) => state.repo.entities;
+export const selectStatus = (state) => state.repo.status; 
+export const selectError = (state) => state.repo.error;
 
-export default userSlice.reducer;
+export default repoSlice.reducer;

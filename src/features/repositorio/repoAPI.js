@@ -1,8 +1,8 @@
-export function fetchRestfulUserById(userId) {
+export function fetchRestfulReposByUserId(userId) {
 
   console.log('llamando a la api')
     return new Promise((resolve, reject) =>
-      fetch(`https://api.github.com/users/${userId}`, 
+      fetch(`https://api.github.com/users/${userId}/repos`, 
         {
           method: 'GET',
           headers: new Headers({
